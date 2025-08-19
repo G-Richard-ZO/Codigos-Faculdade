@@ -121,18 +121,22 @@ int buscaRGA(reg_aluno alunos[], int n, int RGA){
 
 /*              
                     FUNÇÃO BUSCA RGA RECURSIVA
+                -Funciona de maneira parecida com a busca convencional
     -Recebe a lista de alunos cadastrados, a quantidade total de alunos
     e o RGA que será buscado.
+    -Verifica se a posição é 0 que significa que o rga não esta no vetor.
+        Caso seja 0 retorne -1 pois não achou o rga
+    -Caso não seja
     -Retorna a posição do aluno na lista caso o encontre,
     ou -1 se não encontrar.
 */
 
 int buscaRGAr(reg_aluno alunos[], int n, int RGA){
-    /*if(n==0)
-        return -1;*/
-    if(alunos[n-1].rga == RGA || n==0)/*é possivel colocar dentro do if um OU n==0 para executar e devolver o -1*/
-        return n-1;
-    buscaRGAr(alunos, n-1, RGA);
+    if(n==0)
+        return -1;
+    if(alunos[n-1].rga == RGA)/*é possivel colocar dentro do if um OU n==0 para executar e devolver o -1 mas não compensa*/
+        return n-1;             /*o codigo fica mais complicado de emtender*/
+    return buscaRGAr(alunos, n-1, RGA);
 }
 
 
