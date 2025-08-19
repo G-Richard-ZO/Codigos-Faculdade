@@ -33,12 +33,13 @@ typedef struct {
 /*                    FUNÇÕES UTILIZADAS                         */
 int menu();
 int buscaRGA(reg_aluno alunos[], int n, int RGA);
+int buscaRGAr(reg_aluno alunos[], int n, int RGA);
 void cadastraraluno(reg_aluno alunos[], int *n);
 void atualizarnotas (reg_aluno alunos[], int n);
 void mostrartodosalunos(reg_aluno alunos[], int n);
 
 
-int buscaRGAr(reg_aluno alunos[], int n, int RGA);
+
 
 
 /* *************************************************************************************************************
@@ -205,11 +206,9 @@ void atualizarnotas (reg_aluno alunos[], int n){
     do{
         printf("\nPor favor insira o RGA do aluno que será atualizado as notas:\n");
         scanf("%d", &RGA);/*guarda temporariamente para verificar se existe ou não o cadastro*/
-        pos_busca=buscaRGA(alunos, n, RGA);
-        if(pos_busca != -1){
-            printf("\nO RGA inserido ja esta cadastrado!\nPor favor insira outro RGA.\n");
-        }else{
-            alunos[n].rga = RGA;
+        pos_busca=buscaRGAr(alunos, n, RGA);
+        if(pos_busca == -1){
+            printf("\nO RGA inserido nao esta cadastrado!\nPor favor insira outro RGA.\n");
         }
     }while(pos_busca != -1);
 
