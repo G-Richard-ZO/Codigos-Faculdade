@@ -34,8 +34,11 @@ typedef struct {
 int menu();
 int buscaRGA(reg_aluno alunos[], int n, int RGA);
 void cadastraraluno(reg_aluno alunos[], int *n);
+void atualizarnotas (reg_aluno alunos[], int n);
 void mostrartodosalunos(reg_aluno alunos[], int n);
 
+
+int buscaRGAr(reg_aluno alunos[], int n, int RGA);
 
 
 /* *************************************************************************************************************
@@ -108,14 +111,28 @@ int menu() {
 
 int buscaRGA(reg_aluno alunos[], int n, int RGA){
     int i;
-    int pos=-1;
     for(i=0; i<n; i++){
         if(alunos[i].rga == RGA){
-            pos = i;
-            i=n; /*para o for*/
+            return i;
         }
     }
-    return pos; /*Retorna i (posição) se encontrar, senão -1*/
+    return -1; /*Retorna i (posição) se encontrar, senão -1*/
+}
+
+/*              
+                    FUNÇÃO BUSCA RGA RECURSIVA
+    -Recebe a lista de alunos cadastrados, a quantidade total de alunos
+    e o RGA que será buscado.
+    -Retorna a posição do aluno na lista caso o encontre,
+    ou -1 se não encontrar.
+*/
+
+int buscaRGAr(reg_aluno alunos[], int n, int RGA){
+    /*if(n==0)
+        return -1;*/
+    if(alunos[n-1].rga == RGA || n==0)/*é possivel colocar dentro do if um OU n==0 para executar e devolver o -1*/
+        return n-1;
+    buscaRGAr(alunos, n-1, RGA);
 }
 
 
@@ -135,35 +152,73 @@ int buscaRGA(reg_aluno alunos[], int n, int RGA){
 
 void cadastraraluno(reg_aluno alunos[], int *n){
     int i,RGA, pos_busca;
-    printf("\n\nBem vindo ao cadastro de alunos!\n");
+    if(*n == 50){
+        printf("\n\nMaximo de alunos cadastrados, exclua algum aluno antes de tentar novamente.\n");
+    }else{
+        printf("\n\nBem vindo ao cadastro de alunos!\n");
+        do{
+            printf("\nPor favor insira o RGA do aluno a ser cadastrado:\n");
+            scanf("%d", &RGA);/*guarda temporariamente para verificar se existe ou não o cadastro*/
+            pos_busca=buscaRGAr(alunos, *n, RGA);
+            if(pos_busca != -1){
+                printf("\nO RGA inserido ja esta cadastrado!\nPor favor insira outro RGA.\n");
+            }else{
+                alunos[*n].rga = RGA;
+            }
+        }while(pos_busca != -1);
+
+        printf("Insira o nome do aluno:\n");
+        scanf(" %[^\n]", alunos[*n].nome);
+        /*Calculo da média*/
+        alunos[*n].media = 0.0;/*Inicializa para contagem*/
+        for(i=0; i<3; i++){
+            scanf("%f", &alunos[*n].notas[i]);
+            alunos[*n].media = alunos[*n].media + alunos[*n].notas[i];
+        }
+        alunos[*n].media = alunos[*n].media / 3;
+        if(alunos[*n].media >= 6.0){
+            alunos[*n].aprovado = 1;
+        }else{
+            alunos[*n].aprovado = 0;
+        }
+
+        (*n)++;
+    }
+}
+
+/*
+                    FUNÇÃO ATUALIZAR NOTAS PELO RGA   
+
+    -Recebe a lista de alunos e o total de alunos cadastrados.
+    -Deve ser inserido o rga a ser atualizado as notas.
+    -É buscado o rga pela funçao busca rga e é devolvido a posição no vetor, caso não encontre é devolvido o valor -1 e é exibido
+    uma mensagem ao usuario e pede um novo rga.
+*/
+
+void atualizarnotas (reg_aluno alunos[], int n){
+    int RGA, pos_busca;
+
     do{
-        printf("\nPor favor insira o RGA do aluno a ser cadastrado:\n");
+        printf("\nPor favor insira o RGA do aluno que será atualizado as notas:\n");
         scanf("%d", &RGA);/*guarda temporariamente para verificar se existe ou não o cadastro*/
-        pos_busca=buscaRGA(alunos, *n, RGA);
+        pos_busca=buscaRGA(alunos, n, RGA);
         if(pos_busca != -1){
             printf("\nO RGA inserido ja esta cadastrado!\nPor favor insira outro RGA.\n");
         }else{
-            alunos[*n].rga = RGA;
+            alunos[n].rga = RGA;
         }
     }while(pos_busca != -1);
 
-    printf("Insira o nome do aluno:\n");
-    scanf(" %[^\n]", alunos[*n].nome);
-    /*Calculo da média*/
-    alunos[*n].media = 0.0;/*Inicializa para contagem*/
-    for(i=0; i<3; i++){
-        scanf("%f", &alunos[*n].notas[i]);
-        alunos[*n].media = alunos[*n].media + alunos[*n].notas[i];
-    }
-    alunos[*n].media = alunos[*n].media / 3;
-    if(alunos[*n].media >= 6.0){
-        alunos[*n].aprovado = 1;
-    }else{
-        alunos[*n].aprovado = 0;
-    }
-
-    (*n)++;
+    /*buscaRGA*/
 }
+
+
+/*
+                    FUNÇÃO MOSTRAR ALUNOS CADASTRADOS   
+
+    -Recebe a lista de alunos e o total de alunos cadastrados.
+    -Exibe uma tabela com os dados de todos os alunos cadastrados.
+*/
 
 void mostrartodosalunos(reg_aluno alunos[], int n){
     int i;
@@ -183,6 +238,6 @@ void mostrartodosalunos(reg_aluno alunos[], int n){
             printf("\tReprovado !\n");
         }
     }
-    printf("Aperte ENTER para continuar...\n");
-    scanf(" %[^\n]", &tmp);
+    printf("Aperte qualquer tecla e entao ENTER para continuar...\n");
+    scanf(" %[ \n]", &tmp);
 }

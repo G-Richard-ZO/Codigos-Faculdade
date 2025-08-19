@@ -46,7 +46,7 @@ int listaproduto (int taml, int lin, int col, tproduto mat[lin][col], tproduto l
 
             posi= buscaproduto(mat[i][i2].cod, taml, lista);
         
-            if(posi>=0){
+            if(posi!=-1){
                 lista[posi].qtd = lista[posi].qtd + mat[i][i2].qtd;
             }else{
                 lista[qtddif].cod = mat[i][i2].cod;
