@@ -20,6 +20,7 @@ MA de todos os alunos
 
 #include <stdio.h>
 #include <string.h>
+#include <conio.h>/*Para a função de pausa*/
 
 
 typedef struct {
@@ -32,12 +33,15 @@ typedef struct {
 
 /*                    FUNÇÕES UTILIZADAS                         */
 int menu();
+void pausa();
 int buscaRGA(reg_aluno alunos[], int n, int RGA);
 int buscaRGAr(reg_aluno alunos[], int n, int RGA);
+void ordenaMA(reg_aluno alunos[], int n);
+
 void cadastraraluno(reg_aluno alunos[], int *n);
 void atualizarnotas (reg_aluno alunos[], int n);
 void mostrartodosalunos(reg_aluno alunos[], int n);
-
+void removealuno(reg_aluno alunos[], int *n);
 
 
 
@@ -61,6 +65,18 @@ int main(){
 
             case 2: /*mostra os alunos*/
                 mostrartodosalunos(alunos, n);
+            break;
+
+            case 3: /*Remover um aluno*/
+                removealuno(alunos, &n);
+            break;
+
+            case 4: /*Atualizar notas*/
+                atualizarnotas(alunos, n);
+            break;
+
+            case 5: /*Exibir alunos aprovados*/
+                ordenaMA(alunos, n);
             break;
         }
     }while(opcao != 0);
@@ -88,18 +104,25 @@ int main(){
 int menu() {
     int opcao;
 
-    printf("Menu de Opcoes:\n");
+    printf("\n\n\nMenu de Opcoes:\n");
     printf("1. Cadastrar um novo aluno\n");
     printf("2. Mostrar alunos cadastrados\n");
-    printf("3. Remover um aluno. (Nao funcional)\n");
+    printf("3. Remover um aluno.\n");
     printf("4. Atualizar notas de um aluno.\n");
-    printf("5. Exibir alunos aprovados. (Nao funcional)\n");
+    printf("5. Exibir alunos reprovados ordenado por media.\n");
     printf("0. Sair\n");
     printf("Escolha uma opcao: ");
     scanf("%d", &opcao);
 
     return opcao;
 }
+
+void pausa(){
+    int tmp;
+    printf("Aperte qualquer tecla para continuar...\n");
+    tmp = getch();
+}
+
 
 /*
                         FUNÇÃO DE BUSCA DE RGA
@@ -122,7 +145,8 @@ int buscaRGA(reg_aluno alunos[], int n, int RGA){
 
 /*              
                     FUNÇÃO BUSCA RGA RECURSIVA
-                -Funciona de maneira parecida com a busca convencional
+
+    -Funciona de maneira parecida com a busca convencional
     -Recebe a lista de alunos cadastrados, a quantidade total de alunos
     e o RGA que será buscado.
     -Verifica se a posição é 0 que significa que o rga não esta no vetor.
@@ -139,6 +163,30 @@ int buscaRGAr(reg_aluno alunos[], int n, int RGA){
         return n-1;             /*o codigo fica mais complicado de emtender*/
     return buscaRGAr(alunos, n-1, RGA);
 }
+
+
+/*
+                        FUNÇÃO ORDENA MEDIA
+    
+    -Ordena vetor decrescente por media
+*/
+void ordenaMA(reg_aluno alunos[], int n){
+    int i, i2;
+    reg_aluno aux;
+    for(i=0;i<n;i++){
+        for (i2=0;i2<n-1-i;i2++){
+            if(alunos[i2].media < alunos[i2+1].media){
+                aux = alunos[i2];
+                alunos[i2] = alunos[i2+1];
+                alunos[i2+1] = aux;
+            }
+        }
+    }
+}
+
+
+
+
 
 
 
@@ -161,58 +209,35 @@ void cadastraraluno(reg_aluno alunos[], int *n){
         printf("\n\nMaximo de alunos cadastrados, exclua algum aluno antes de tentar novamente.\n");
     }else{
         printf("\n\nBem vindo ao cadastro de alunos!\n");
-        do{
-            printf("\nPor favor insira o RGA do aluno a ser cadastrado:\n");
-            scanf("%d", &RGA);/*guarda temporariamente para verificar se existe ou não o cadastro*/
-            pos_busca=buscaRGAr(alunos, *n, RGA);
-            if(pos_busca != -1){
-                printf("\nO RGA inserido ja esta cadastrado!\nPor favor insira outro RGA.\n");
-            }else{
-                alunos[*n].rga = RGA;
-            }
-        }while(pos_busca != -1);
-
-        printf("Insira o nome do aluno:\n");
-        scanf(" %[^\n]", alunos[*n].nome);
-        /*Calculo da média*/
-        alunos[*n].media = 0.0;/*Inicializa para contagem*/
-        for(i=0; i<3; i++){
-            scanf("%f", &alunos[*n].notas[i]);
-            alunos[*n].media = alunos[*n].media + alunos[*n].notas[i];
-        }
-        alunos[*n].media = alunos[*n].media / 3;
-        if(alunos[*n].media >= 6.0){
-            alunos[*n].aprovado = 1;
+        
+        printf("\nPor favor insira o RGA do aluno a ser cadastrado:\n");
+        scanf("%d", &RGA);
+        pos_busca=buscaRGAr(alunos, *n, RGA);
+        if(pos_busca != -1){
+            printf("\nO RGA inserido ja esta cadastrado!\nPor favor insira outro RGA.\n");
         }else{
-            alunos[*n].aprovado = 0;
-        }
+            alunos[*n].rga = RGA;
+            printf("Insira o nome do aluno:\n");
+            scanf(" %[^\n]", alunos[*n].nome);
+            /*Calculo da média*/
+            alunos[*n].media = 0.0;/*Inicializa para contagem*/
+            for(i=0; i<3; i++){
+                scanf("%f", &alunos[*n].notas[i]);
+                alunos[*n].media = alunos[*n].media + alunos[*n].notas[i];
+            }
+            alunos[*n].media = alunos[*n].media / 3;
+            if(alunos[*n].media >= 6.0){
+                alunos[*n].aprovado = 1;
+            }else{
+                alunos[*n].aprovado = 0;
+            }
 
-        (*n)++;
+            (*n)++;
+        }
+        
+
+        
     }
-}
-
-/*
-                    FUNÇÃO ATUALIZAR NOTAS PELO RGA   
-
-    -Recebe a lista de alunos e o total de alunos cadastrados.
-    -Deve ser inserido o rga a ser atualizado as notas.
-    -É buscado o rga pela funçao busca rga e é devolvido a posição no vetor, caso não encontre é devolvido o valor -1 e é exibido
-    uma mensagem ao usuario e pede um novo rga.
-*/
-
-void atualizarnotas (reg_aluno alunos[], int n){
-    int RGA, pos_busca;
-
-    do{
-        printf("\nPor favor insira o RGA do aluno que será atualizado as notas:\n");
-        scanf("%d", &RGA);/*guarda temporariamente para verificar se existe ou não o cadastro*/
-        pos_busca=buscaRGAr(alunos, n, RGA);
-        if(pos_busca == -1){
-            printf("\nO RGA inserido nao esta cadastrado!\nPor favor insira outro RGA.\n");
-        }
-    }while(pos_busca != -1);
-
-    /*buscaRGA*/
 }
 
 
@@ -241,6 +266,71 @@ void mostrartodosalunos(reg_aluno alunos[], int n){
             printf("\tReprovado !\n");
         }
     }
-    printf("Aperte qualquer tecla e entao ENTER para continuar...\n");
-    scanf(" %[ \n]", &tmp);
+    pausa();
+    
+    
 }
+
+
+
+/*
+                    FUNÇÃO ATUALIZAR NOTAS PELO RGA   
+
+    -Recebe a lista de alunos e o total de alunos cadastrados.
+    -Deve ser inserido o rga a ser atualizado as notas.
+    -É buscado o rga pela funçao busca rga e é devolvido a posição no vetor, caso não encontre é devolvido o valor -1 e é exibido
+    uma mensagem ao usuario e pede um novo rga.
+*/
+
+void atualizarnotas (reg_aluno alunos[], int n){
+    int pos_busca, RGA;
+
+    do{
+        printf("\nPor favor insira o RGA do aluno que será atualizado as notas:\n");
+        scanf("%d", &RGA);
+        pos_busca=buscaRGAr(alunos, n, RGA);
+        if(pos_busca == -1){
+            printf("\nO RGA inserido nao esta cadastrado!\nPor favor insira outro RGA.\n");
+        }else{
+            printf("Insira as novas notas:\n");
+            scanf("%f %f %f", &alunos[pos_busca].notas[0], &alunos[pos_busca].notas[1], &alunos[pos_busca].notas[2]);
+            alunos[pos_busca].media= (alunos[pos_busca].notas[0]+alunos[pos_busca].notas[1]+alunos[pos_busca].notas[2]) / 3;
+        }
+    }while(pos_busca != -1);
+
+    /*buscaRGA*/
+}
+
+/*
+                Função Remover Aluno
+
+*/
+
+void removealuno(reg_aluno alunos[], int *n){
+    int RGA, pos_busca, i;
+    do{
+        printf("\nPor favor insira o RGA do aluno que será removido:\n");
+        scanf("%d", &RGA);
+        pos_busca=buscaRGAr(alunos, *n, RGA);
+        if(pos_busca == -1){
+            printf("\nO RGA inserido nao esta cadastrado!\nPor favor insira outro RGA.\n");
+        }else{
+            for(i=pos_busca; i<*n-1; i++){
+                alunos[i] = alunos[i+1]; /*Desloca os elementos para a esquerda*/
+            }
+            (*n)--; /*Diminui o total de alunos cadastrados*/
+            printf("\nAluno com RGA %d removido com sucesso!\n", RGA);
+        
+        }
+    }while(pos_busca != -1);
+}
+
+
+
+
+
+
+
+
+
+
