@@ -1,3 +1,9 @@
+/*
+Nome: Gabriel Richard
+RGA:  2025.0743.013-0
+*/
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -16,12 +22,14 @@ typedef struct {
 /*                    FUNÇÕES UTILIZADAS                         */
 int menu();
 void pausa();
-int buscacod(reg_produto produtos[], int n, int cod);
-
+int buscacod(reg_produto produtos[], int n, int cod);/* FUNÇÃO RECURSIVA    */
+void ordenaNome(reg_produto produtos[], int n);
+void ordenaqtd(reg_produto produtos[], int n);
 
 int cadastrarproduto(reg_produto produtos[], int n);
-
-void mostrarprodutos(reg_produto produtos[], int n);
+int removerprodutos(reg_produto produtos[], int n);
+void atualizarprodutos(reg_produto produtos[], int n);
+void mostrarprodutos(reg_produto produtos[], int n);/*  FUNÇÃO RECURSIVA    */
 
 
 /**************************************************************************************************
@@ -54,21 +62,27 @@ int main (){
 
 
             case 2: /*Remover produtos*/
-                /*n=removerprodutos(produtos, n);*/
+                n=removerprodutos(produtos, n);
             break;
 
-            case 3: /*Remover um aluno*/
-                /*atualizarproduto(produtos, n);*/
+            case 3: /*Atualizar produto*/
+                atualizarprodutos(produtos, n);
             break;
 
-            case 4: /*Atualizar notas*/
-                /*listanome(produtos, n);*/
+            case 4: /*Listar por nome*/
+                ordenaNome(produtos, n);
+                printf("\nCodigo\t\tProduto \t\t\tCategoria \t\t\tQuantidade \tPreco\n");
+                mostrarprodutos(produtos, n);
+                pausa();
             break;
 
-            case 5: /*Exibir alunos aprovados*/
-                /*listaqtd(produtos, n);*/
+            case 5: /*Listar por quantidade*/
+                ordenaqtd(produtos, n);
+                printf("\nCodigo\t\tProduto \t\t\tCategoria \t\t\tQuantidade \tPreco\n");
+                mostrarprodutos(produtos, n);
+                pausa();
             break;
-            case 6: /*Exibir alunos aprovados*/
+            case 6: /*Listar por categoria*/
                 /*listacategoria(produtos, n);*/
             break;
             case 7: /*Exibir alunos aprovados*/
@@ -110,13 +124,24 @@ int menu() {
 
     return opcao;
 }
+int menualtera() {
+    int opcao;
 
+    printf("\n\n\nO que voce deseja alterar no produto ?\n\n");
+    printf("1. Alterar quantidade.\n");
+    printf("2. Alterar preco\n\n");
+    printf("0. Voltar\n");
+    printf("Escolha uma opcao: ");
+    scanf("%d", &opcao);
+
+    return opcao;
+}
 void pausa(){
     printf("\nAperte qualquer tecla para continuar...\n");
     getch();
 }
 
-/* FUNÇÃO BUSCA CODIGO */
+/*              FUNÇÃO BUSCA CODIGO                          */
 int buscacod(reg_produto produtos[], int n, int cod){
     if(n==0)
         return -1;
@@ -125,25 +150,44 @@ int buscacod(reg_produto produtos[], int n, int cod){
     return buscacod(produtos, n-1, cod);
 }
 
+/*              FUNÇÃO ORDENA NOME                           */
+void ordenaNome(reg_produto produtos[], int n){
+    int i, i2, mov;
+    reg_produto aux;
+    for(i=0;i<n;i++){
+        for (i2=0;i2<n-1-i;i2++){
+            mov=strcmp(produtos[i2].nome, produtos[i2+1].nome);
+            if(mov<0){
+                aux = produtos[i2];
+                produtos[i2] = produtos[i2+1];
+                produtos[i2+1] = aux;
+            }
+        }
+    }
+}
 
+/*              FUNÇÃO ORDENA QUANTIDADE                     */
+void ordenaqtd(reg_produto produtos[], int n){
+    int i, i2;
+    reg_produto aux;
+    for(i=0;i<n;i++){
+        for (i2=0;i2<n-1-i;i2++){
+            if(produtos[i2].qtd < produtos[i2+1].qtd){
+                aux = produtos[i2];
+                produtos[i2] = produtos[i2+1];
+                produtos[i2+1] = aux;
+            }
+        }
+    }
+}
 
 
 /***********************************************************************************
  *                          FUNÇÕES PRINCIPAIS DO CODIGO                           *
  ***********************************************************************************/
 
- /*
-                        FUNÇÃO CADASTRAR PRODUTO
+/*              FUNÇÃO CADASTRAR PRODUTO                     */
 
-    -Recebe a lista de alunos e o total de alunos cadastrados.
-    -le primeiro o RGA, e verifica se já existe um cadastro com esse RGA;
-        -se já existir um cadastro, notifica o usuário e pede outro RGA;
-        -se não, inclui o RGA no vetor de alunos e continua o cadastro.
-    -Lê o nome do aluno;
-    -Lê as 3 notas do aluno e já calcula a média;
-    -Por último define pela media se o aluno está aprovado ou reprovado.
-    -Adiciona +1 ao total de alunos cadastrados.
-*/
 
 int cadastrarproduto(reg_produto produtos[], int n){
     int cod, pos_busca;
@@ -151,7 +195,7 @@ int cadastrarproduto(reg_produto produtos[], int n){
         printf("\n\nMaximo de produtos cadastrados, exclua algum produto antes de tentar novamente.\n");
     }else{
         printf("\n\nBem vindo ao cadastro de produtos!\n");
-        
+        do{
         printf("\nPor favor insira o codigo do produto a ser cadastrado:\n");
         scanf("%d", &cod);
         pos_busca=buscacod(produtos, n, cod);
@@ -169,39 +213,73 @@ int cadastrarproduto(reg_produto produtos[], int n){
             scanf("%f", &produtos[n].preco);
             
             n++;
-            return n;
+            
         }
+        }while(pos_busca != -1);
+        printf("\nProduto cadastrado com sucesso!\n");
     }
+    return n;
 }
 
 /*              FUNÇÃO REMOVE PRODUTO                        */
-void removealuno(reg_produto alunos[], int n){
+int removerprodutos(reg_produto produtos[], int n){
     int cod, pos_busca, i;
     do{
-        printf("\nPor favor insira o RGA do aluno que será removido:\n");
-        scanf("%d", &cod
-        pos_busca=buscacod(alunos, n, cod);
+        printf("\nPor favor insira o codigo do produto que será removido:\n");
+        scanf("%d", &cod);
+        pos_busca=buscacod(produtos, n, cod);
         if(pos_busca == -1){
-            printf("\nO RGA inserido nao esta cadastrado!\nPor favor insira outro RGA.\n");
+            printf("\nO codigo de produto inserido nao esta cadastrado!\nPor favor insira outro codigo.\n");
         }else{
             for(i=pos_busca; i<n-1; i++){
-                produtos[i] = alunos[i+1]; /*Desloca os elementos para a esquerda*/
+                produtos[i] = produtos[i+1]; /*Desloca os elementos para a esquerda*/
             }
-            (*n)--; /*Diminui o total de alunos cadastrados*/
-            printf("\nAluno com RGA %d removido com sucesso!\n", cod);
-        
+            n--; /*Diminui o total de alunos cadastrados*/
+            printf("\nProduto com codigo %d removido com sucesso!\n", cod);
+            return n;
         }
-    }while(pos_busca != -1);
+    }while(pos_busca == -1);
+}
+
+/*              FUNÇÃO ATUALIZA PRODUTO                      */
+void atualizarprodutos(reg_produto produtos[], int n){
+    int pos_busca, cod, opcao;
+    do{
+        printf("\nPor favor insira o codigo do produto que sera atualizado:\n");
+        scanf("%d", &cod);
+        pos_busca=buscacod(produtos, n, cod);
+        if(pos_busca == -1){
+            printf("\nO codigo inserido nao pertence a um produto cadastrado!\nPor favor insira outro codigo de produto.\n");
+        }else{
+            opcao=menualtera();
+            switch(opcao){
+                case 1: /*Altera a quantidade*/
+                    printf("Insira a nova quantidade do produto:");
+                    scanf("%d", &produtos[pos_busca].qtd);
+                    printf("\n\nQuantidade atualizada com sucesso!\n");
+                break;
+                case 2: /*Altera o preco*/
+                    printf("Insira o novo preco do produto:");
+                    scanf("%f", &produtos[pos_busca].preco);
+                    printf("\n\nPreco atualizado com sucesso!\n");
+                break;
+            }
+        }
+    }while(pos_busca == -1);
+
 }
 
 
-
-
-
-
+/*              FUNÇÃO MOSTRAR PRODUTOS (RECURSIVA)          */
 void mostrarprodutos(reg_produto produtos[], int n){
     if(n>0){
-        printf("\n%d\t\t%s \t\t\t%s\t\t\t%d\t%.2f", 
+        /*printf("\nCodigo: %d\t\tNome:%s \t\t\tCategoria: %s\t\tQuantidade: %d\tPreco: %.2f", 
+            produtos[n-1].cod,
+            produtos[n-1].nome,
+            produtos[n-1].cat,
+            produtos[n-1].qtd,
+            produtos[n-1].preco);*/
+        printf("\n%d\t\t%s \t\t\t%s\t\t%d\t%.2f", 
             produtos[n-1].cod,
             produtos[n-1].nome,
             produtos[n-1].cat,
@@ -210,9 +288,4 @@ void mostrarprodutos(reg_produto produtos[], int n){
 
         mostrarprodutos(produtos, n-1);
     }
-        
-    
-    
-    
-    
 }
