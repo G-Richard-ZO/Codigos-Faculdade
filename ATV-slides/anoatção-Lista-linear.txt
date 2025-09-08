@@ -1,0 +1,173 @@
+Teste de anotação de aula
+
+        Malloc Aloca um vetor dinamicamente, retorna um ponteiro
+
+        REalloc (aumenta o tamanho do meu vetor alocado dinamicamente)
+                ñ recomendado devido ao consumo de memoria
+                retorna o ponteiro da nova localização do vetor
+
+
+
+
+
+
+
+
+    Lista linear ou lista armazena um conjunto de elementos relacionados
+    Ex:
+        lista de mercado
+        lista de contatos
+
+
+
+    cada informação que esta na lista é um registro nomeado celula ou elemento
+    um desses campos é a chave ( um identificador) que é utilizado para efetuar operações na lista
+
+
+
+    uma lista linear L é um conjunto de n elementos (celulas) dispostos em uma sequencia linear
+    L = {c1, c2, c3, ..., cn}
+    onde a ordem relativa dos elementos é importante
+
+
+
+    operações basicas
+        Busca
+        Inserção (sem restrição como outros TADS)
+        Remoção (sem restrição como outros TADS)
+
+
+    outras operações
+        concaenaçao de duas ou mais listas
+        separacaao de uma lista em dua ou mais listas
+        ordenação dos elementos de uma lista  
+
+    
+
+    IMPLEMENTAÇÃO   
+
+
+    pode ser implementada de duas maneiras,
+
+        alocação sequencial
+            os elementos são armazenados em posições contínuas de memória
+            ex: vetores, matrizes
+    
+        alocação encadeada
+            os elementos são armazenados em posições não contínuas de memória
+
+        a escolha depende de fatores como
+            - tipo de aplicação
+            - quantidade de elementos a serem armazenados
+            - operações que serão realizadas com mais frequência
+            - restrições de memória, se tem memória sobrando ou não
+
+
+    COMPLEXIDADE
+        ESPAÇO
+        0(n), onde N == tamanho do vetores
+
+        TEMPO
+
+                            busca
+            cenario                 melhor caso                       pior caso
+
+            Lista ñ ordenada        O(1)                                   O(n) 
+                                    primeiro elemento que olho          Elemento nn esta na lista
+
+
+
+    Uma lista linear em alocacao encadeada, chamada de lista encadeada ou lista ligada, é ocmposta por células
+    ou NÓS que podem estar em posições não sequenciais
+    
+
+    estrutura encadeamento
+
+    struct cel{
+        int chave
+        struct cel *prox
+    }
+
+    typedef struct cel celula;
+                                    
+    
+
+    Busca
+
+    NORMAL
+    celula *busca(int X, celula *lst){
+
+        celula *p;
+        p = lst;
+
+        while(p!=NULL && p->chave != X)
+            p = p->prox;
+
+        return p;
+    }
+
+    RECURSIVA
+    celula *busca_rec(int X, celula *lst){
+
+        if(lst == NULL)
+            return NULL;
+
+        if(lst->chave == X)
+            return lst;
+        
+        return busca_rec(x, lst->prox);
+    }
+
+
+
+
+
+    Busca com Inserção no final
+
+
+    entrada: lst e valor X a ser inserido
+
+    saida: lista atualizada com X inserido caso ainda nn esteja na lista, caso contrario a lista 
+        continua sem alteração
+
+    Essa função pode ser usada tanto para inserir no final como para inserir ordenad
+    utiliza dois ponteiros para percorrer  P e Q 
+
+    
+
+
+
+    Busca seguida de remoção
+
+
+    void busca_remove(int X, celula **lst){
+
+        celula *p, *q;
+        p=NULL;
+        q=*lst;
+
+
+        while(q!=NULL && q->chave != X)
+            p = q;
+            q = q->prox; /*q anda para frente*/
+
+
+        if (q!=NULL){
+            if (p!= NULL){
+                p->prox = q->prox
+            }else{ 
+                *lst = q->prox
+            }
+            free (q)
+        }
+        
+    }
+
+
+
+    COMPLEXIDADE
+        ESPAÇO
+
+
+
+        TEMPO
