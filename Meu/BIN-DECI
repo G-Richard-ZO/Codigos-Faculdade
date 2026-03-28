@@ -1,0 +1,76 @@
+/******************************************
+ * Codigo criado para conversão de numeros
+ * 
+ * Binario -> Decimal e Decimal -> Binário
+ * 
+ * Criador: G. Richard Z. O.
+ ****************************************/
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int menu(); /*Lin: 54*/
+
+
+/*  Calcula Potencia    */
+int potencia(int base, int expo){
+    int resultado = 1;
+    for (int i = 0; i < expo; i++){
+        resultado *= base;
+    }
+    return resultado;
+}
+
+void todecimal(int bin){
+    int rest;
+}
+
+void tobin(int dec){
+
+
+}
+
+int main() {
+
+
+
+    int option;
+    while (option != 0) {
+        option = menu();
+        switch (option){
+        case 1:/*From binary to decimal */
+            /* code */
+            break;
+            
+        case 2:/*From decimal to binary */
+            /* code */
+            break;
+
+        case 0:
+            printf("Saindo do programa...\n");
+            break;
+        default:
+            printf("Opção inválida. selecione outra opção.\n");
+            break;
+        }
+    }
+    return 0;
+}
+
+                /*  Função MENU  */
+int menu(){
+    int num;
+
+    printf("===============================\n");
+    printf("1. Converter binário para decimal\n");
+    printf("2. Converter decimal para binário\n");
+    printf("0. Sair\n");
+    printf("===============================\n");
+
+    printf("Escolha uma opção: ");
+    scanf("%d", &num);
+    
+    return num;
+}

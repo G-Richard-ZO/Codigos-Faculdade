@@ -62,13 +62,12 @@ int main (){
     reg_produto *produtos;
     reg_cat *categorias;/*tipo de variavel para monitorar o total de qtd por categoria*/
     int n=0, max; /*Qntd de produtos cadastrados*/
-    int ncat; /*Qntd de categorias cadastradas*/
     int opcao;
-
+    
     FILE *arq;
-    arq = fopen("C:\\Users\\Biel\\OneDrive\\Área de Trabalho\\Códigos\\C\\ATV-cadastro-de-produtos\\produtos1.txt", "r");
+    arq = fopen("produtos1.txt", "r");
     if(arq == NULL){
-        perror("Erro na abertura do arquivo!\n");
+        perror("Erro na abertura do arquivo!: ");
         return 0;
     }
 
@@ -90,11 +89,12 @@ int main (){
 
 
     while(!feof(arq) && n<max){
-        fscanf(arq, "%d", &produtos[n].cod);
-        fscanf(arq, " %[^\n]", produtos[n].nome);
-        fscanf(arq, " %[^\n]", produtos[n].cat);
-        fscanf(arq, "%d", &produtos[n].qtd);
-        fscanf(arq, "%f", &produtos[n].preco);
+        fscanf(arq,"%d;%[^;];%[^;];%d;%f", 
+            &produtos[n].cod,
+            produtos[n].nome,
+            produtos[n].cat,
+            &produtos[n].qtd,
+            &produtos[n].preco);
         n++;
     }
 
@@ -129,9 +129,8 @@ int main (){
             break;
             case 6: /*Listar por categoria*/
                 printf("\nCategoria \t\t\tQuantidade\n");
-                ncat=ordenacat(produtos, n, categorias);
-                mostrarcat(categorias, ncat);
-                ncat=0; /*Zera o contador de categorias para não duplicar na próxima exibição*/
+                mostrarcat(categorias, ordenacat(produtos, n, categorias));
+                 /*Zera o contador de categorias para não duplicar na próxima exibição*/
                 pausa();
             break;
             case 7: /*Exibir todos os produtos cadastrados*/
@@ -141,7 +140,20 @@ int main (){
             break;
         }
     }while(opcao != 0);
-    
+    fclose(arq);
+    arq = fopen("produtos-bin.txt", "wb");
+    fprintf(arq,"%d\n", max);
+    n--;
+    while(n>=0){
+        fprintf(arq,"%d;%s;%s;%d;%2.f\n", 
+        produtos[n].cod,
+        produtos[n].nome,
+        produtos[n].cat, 
+        produtos[n].qtd,
+        produtos[n].preco);
+        n--;
+    }
+    fclose(arq);
     free(produtos);
     return 0;
 

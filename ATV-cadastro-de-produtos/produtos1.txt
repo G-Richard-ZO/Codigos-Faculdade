@@ -1,16 +1,16 @@
 14
-1001;Notebook;Eletr么nicos;50;4500.50
-1002;Mouse;Acess贸rios;200;85.90
-1003;Teclado Mec芒nico;Acess贸rios;150;350.00
-1004;Monitor Ultrawide;Eletr么nicos;30;1899.99
-1005;Webcam Full HD;Perif茅ricos;80;250.75
-1006;Impressora Multifuncional;Eletr么nicos;45;1200.00
+1001;Notebook;Eletr鬾icos;50;4500.50
+1002;Mouse;Acess髍ios;200;85.90
+1003;Teclado Mec鈔ico;Acess髍ios;150;350.00
+1004;Monitor Ultrawide;Eletr鬾icos;30;1899.99
+1005;Webcam Full HD;Perif閞icos;80;250.75
+1006;Impressora Multifuncional;Eletr鬾icos;45;1200.00
 1007;HD Externo 1TB;Armazenamento;120;380.50
 1008;SSD 500GB;Armazenamento;90;420.00
 1009;Roteador Wi-Fi;Redes;60;150.00
-1010;Headset Gamer;Perif茅ricos;75;450.00
-1011;Cadeira de Escrit贸rio;M贸veis;25;890.00
-1012;Mesa para Computador;M贸veis;15;550.00
-1013;Caixa de Som;Acess贸rios;110;95.00
-1014;Microfone Condensador;Perif茅ricos;40;670.00
+1010;Headset Gamer;Perif閞icos;75;450.00
+1011;Cadeira de Escrit髍io;M髒eis;25;890.00
+1012;Mesa para Computador;M髒eis;15;550.00
+1013;Caixa de Som;Acess髍ios;110;95.00
+1014;Microfone Condensador;Perif閞icos;40;670.00
 

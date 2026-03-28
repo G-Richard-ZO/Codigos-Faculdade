@@ -1,0 +1,15 @@
+14
+1011;Cadeira de Escritório;Móveis;25;890
+1013;Caixa de Som;Acessórios;110;95
+1007;HD Externo 1TB;Armazenamento;120;381
+1010;Headset Gamer;Periféricos;75;450
+1006;Impressora Multifuncional;Eletrônicos;45;1200
+1012;Mesa para Computador;Móveis;15;550
+1014;Microfone Condensador;Periféricos;40;670
+1004;Monitor Ultrawide;Eletrônicos;30;1900
+1002;Mouse;Acessórios;200;86
+1001;Notebook;Eletrônicos;50;4501
+1009;Roteador Wi-Fi;Redes;60;150
+1008;SSD 500GB;Armazenamento;90;420
+1003;Teclado Mecânico;Acessórios;150;350
+1005;Webcam Full HD;Periféricos;80;251
